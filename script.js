@@ -37,13 +37,17 @@ function draw() {
     } else {
         blk_yoffs = -blk_yoffs
     }
-    for (let i = -3; i < rows+3; i++) {
+    for (let i = -3; i < rows+6; i++) {
         const offs = (i%2)==0 ? 0 : 0.5
         for (let j = -2; j < cols+2; j++) {
-            ctx.drawImage(
-                getTile(j-blk_xoffs, i-blk_yoffs),
-                blk*(j-offs)-px_xoffs-1, qblk*i-px_yoffs-1,
-                blk+2, hblk+2);
+            const tle = getTile(j-blk_xoffs, i-blk_yoffs)
+            const xpos = blk*(j-offs)-px_xoffs-1
+            const ypos = qblk*i-px_yoffs-1
+            if (tle.width == tle.height) {
+                ctx.drawImage(tle, xpos, ypos-hblk, blk+2, blk+2)
+            } else {
+                ctx.drawImage(tle, xpos, ypos, blk+2, hblk+2)
+            }
         }
     }
 }
