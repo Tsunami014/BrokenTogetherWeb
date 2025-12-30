@@ -1,11 +1,13 @@
-const c = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+const c = document.getElementById('canvas')
+const ctx = canvas.getContext('2d')
 
 
-const img = new Image();
-img.src = "assets/tile.svg"
-const img2 = new Image();
-img2.src = "assets/tile2.svg"
+const imgNames = [
+    "tile",
+    "tile2",
+    "space"
+]
+const imgs = new Map()
 
 
 var x = 0
@@ -13,7 +15,7 @@ var y = 0
 const units = 8 // How many units in one block (one block is 2x1 'blocks')
 
 function draw() {
-    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.clearRect(0, 0, c.width, c.height)
     const cols = 8
     const blk = Math.ceil(c.width/cols) // width
     const hblk = Math.floor(blk/2) // height or half width
@@ -27,6 +29,7 @@ function draw() {
     } else {
         blk_xoffs = -blk_xoffs
     }
+    blk_xoffs += cols/2
     var blk_yoffs = Math.floor(Math.abs(y)/units)*2
     let px_yoffs = Math.abs(y/units*hblk)%hblk
     if (y < 0) {
@@ -34,10 +37,11 @@ function draw() {
     } else {
         blk_yoffs = -blk_yoffs
     }
+    blk_yoffs += rows/2
     for (let i = -3; i < rows+6; i++) {
         const offs = (i%2)==0 ? 0 : 0.5
         for (let j = -2; j < cols+2; j++) {
-            const tle = getTile(j-blk_xoffs, i-blk_yoffs)
+            const tle = imgs.get(getTile(j-blk_xoffs, i-blk_yoffs))
             const xpos = blk*(j-offs)-px_xoffs-1
             const ypos = qblk*i-px_yoffs-1
             if (tle.width == tle.height) {
@@ -51,24 +55,24 @@ function draw() {
 
 
 // Keep keys in a dict
-const keys = {};
-window.addEventListener('keydown', (e) => keys[e.key] = true);
-window.addEventListener('keyup', (e) => keys[e.key] = false);
+const keys = {}
+window.addEventListener('keydown', (e) => keys[e.key] = true)
+window.addEventListener('keyup', (e) => keys[e.key] = false)
 
 function tick() {
     var oldx = x
     var oldy = y
     if (keys['ArrowUp']) {
-        y -= 0.5
+        y -= 2
     }
     if (keys['ArrowDown']) {
-        y += 0.5
+        y += 2
     }
     if (keys['ArrowLeft']) {
-        x -= 0.5
+        x -= 1
     }
     if (keys['ArrowRight']) {
-        x += 0.5
+        x += 1
     }
     if (oldx != x || oldy != y) {
         draw()
@@ -76,19 +80,26 @@ function tick() {
 }
 
 function resizeCanvas() {
-    c.width = window.innerWidth;
-    c.height = window.innerHeight;
-    draw(); 
+    c.width = window.innerWidth
+    c.height = window.innerHeight
+    draw()
 }
 
 async function init() {
-    // Wait for images to be ready
-    await img.decode()
-    await img2.decode()
-    resizeCanvas(); // Initial draw
+    // Load all images
+    for (const nam of imgNames) {
+        const img = new Image()
+        img.src = `assets/tiles/${nam}.svg`
+        imgs.set(nam, img)
+        await img.decode()
+    }
 
-    window.addEventListener('resize', resizeCanvas);
-    setInterval(tick, 17);
+    newPlanet()
+
+    resizeCanvas() // Initial draw
+
+    window.addEventListener('resize', resizeCanvas)
+    setInterval(tick, 17)
 }
 init()
 
