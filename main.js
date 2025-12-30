@@ -7,9 +7,6 @@ img.src = "assets/tile.svg"
 const img2 = new Image();
 img2.src = "assets/tile2.svg"
 
-function getTile(x, y) {
-    return ((x*y)%3+x+y)%2==0 ? img : img2
-}
 
 var x = 0
 var y = 0
