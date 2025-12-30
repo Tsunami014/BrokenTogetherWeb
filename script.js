@@ -2,18 +2,25 @@ const c = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
 
 
+const img = new Image();
+img.src = "assets/tile.svg"
+
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); 
-    ctx.fillStyle = 'cornflowerblue';
-    ctx.fillRect(canvas.width / 4, canvas.height / 4, canvas.width / 2, canvas.height / 2);
+    ctx.clearRect(0, 0, c.width, c.height); 
+    ctx.drawImage(img, 0, 0);
 }
 
 
 function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
     draw(); 
 }
 window.addEventListener('resize', resizeCanvas);
-resizeCanvas(); // Initial draw
+
+async function init() {
+    await img.decode() // Wait for image to be ready
+    resizeCanvas(); // Initial draw
+}
+init()
 
