@@ -41,17 +41,16 @@ function draw() {
         blk_yoffs = -blk_yoffs
     }
     blk_yoffs += rows/2
+    const scale = blk/32
     for (let i = -3; i < rows+6; i++) {
         const offs = (i%2)==0 ? 0 : 0.5
         for (let j = -2; j < cols+2; j++) {
             const tle = imgs.get(getTile(j-blk_xoffs, i-blk_yoffs))
             const xpos = blk*(j-offs)-px_xoffs-1
             const ypos = qblk*i-px_yoffs-1
-            if (tle.width == tle.height) {
-                ctx.drawImage(tle, xpos, ypos-hblk, blk+2, blk+2)
-            } else {
-                ctx.drawImage(tle, xpos, ypos, blk+2, hblk+2)
-            }
+            const thei = tle.height * scale
+            const twid = tle.width * scale
+            ctx.drawImage(tle, xpos-twid+hblk, ypos-thei+hblk, twid+2, thei+2)
         }
     }
 }

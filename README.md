@@ -1,2 +1,2 @@
 # Broken together web
-A game about finding your best friend in a fractured galaxy
+A game about finding your best friend in a galaxy
