@@ -5,7 +5,10 @@ const ctx = canvas.getContext('2d')
 const imgNames = [
     "tile",
     "tile2",
-    "space"
+    "space1",
+    "space2",
+    "nebula1",
+    "nebula2"
 ]
 const imgs = new Map()
 
