@@ -64,5 +64,5 @@ function getTile(x, y) {
         }
         return "space"+(rand(x, y, 2)%2+1).toString()
     }
-    return rand(x, y)%2==0 ? "tile" : "tile2"
+    return smoothrand(x, y, 5, 2)==0 ? "tile" : "tile2"
 }
