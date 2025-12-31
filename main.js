@@ -35,7 +35,7 @@ function draw() {
     } else {
         blk_xoffs = -blk_xoffs
     }
-    blk_xoffs += cols/2
+    blk_xoffs = Math.round(blk_xoffs + cols/2)
     var blk_yoffs = Math.floor(Math.abs(y)/units)*2
     let px_yoffs = Math.abs(y/units*hblk)%hblk
     if (y < 0) {
@@ -43,7 +43,7 @@ function draw() {
     } else {
         blk_yoffs = -blk_yoffs
     }
-    blk_yoffs += rows/2
+    blk_yoffs = Math.round(blk_yoffs+rows/2)
     const scale = blk/32
     for (let i = -3; i < rows+6; i++) {
         const offs = (i%2)==0 ? 0 : 0.5
