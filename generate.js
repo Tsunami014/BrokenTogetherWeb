@@ -56,13 +56,67 @@ function smoothrand(x, y, blksze, mod, ...extra) {
         rand(ix+1,iy+1, ...extra) %mod * tx       * ty)%mod
 }
 
-function getTile(x, y) {
+
+function getTileBase(x, y) {
     let dist = x*x*x_wonk + y*y*y_wonk
     if (dist > planetSze) {
         if (dist > planetSze+64 && smoothrand(x, y, 10, 4, 1) == 0) {
-            return "nebula"+(rand(x, y, 2)%2+1).toString()
+            return ["nebula", (tle, others) => {
+                // If next to a ground, turn into space
+                if (others.some(it=>{ return it != "space" && it != "nebula" })) {
+                    return "space"
+                }
+            }]
         }
-        return "space"+(rand(x, y, 2)%2+1).toString()
+        return ["space"]
     }
-    return smoothrand(x, y, 5, 2)==0 ? "tile" : "tile2"
+    return [
+        smoothrand(x, y, 5, 2)==0 ? "tile" : "tile2",
+        (tle, others) => {
+            var count = {}
+            var mx
+            var amnt = 0
+            var space = 0
+
+            for (const o of others) {
+                if (o == "space" || o == "nebula") {
+                    space += 1
+                } else {
+                    count[o] = (count[o] | 0) + 1
+                    if (count[o] > amnt) {
+                        mx = o
+                        amnt = count[o]
+                    }
+                }
+            }
+            if (amnt > 1 && amnt >= 3-space) {
+                return mx
+            }
+        }
+    ]
+}
+function getTile(x, y) {
+    const tle = getTileBase(x, y)
+    var otle
+    if (tle.length > 1) {
+        const offs = y%2 ? -1 : 1
+        const others = [
+            getTileBase(x, y-1)[0],
+            getTileBase(x+offs, y-1)[0],
+            getTileBase(x, y+1)[0],
+            getTileBase(x+offs, y+1)[0],
+        ]
+        otle = tle[1](tle[0], others)
+    }
+    if (otle === undefined) {
+        otle = tle[0]
+    }
+
+    switch (otle) {
+        case "nebula":
+        case "space":
+            return otle+(rand(x, y, 3)%2+1).toString()
+        default:
+            return otle
+    }
 }
