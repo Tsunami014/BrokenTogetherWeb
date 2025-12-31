@@ -19,7 +19,10 @@ const units = 8 // How many units in one block (one block is 2x1 'blocks')
 
 function draw() {
     ctx.clearRect(0, 0, c.width, c.height)
-    const cols = 8
+    var cols = Math.floor((c.width/c.height + 1) * 4)
+    if (cols > 12) {
+        cols = 12
+    }
     const blk = Math.ceil(c.width/cols) // width
     const hblk = Math.floor(blk/2) // height or half width
     const qblk = Math.floor(blk/4) // half height
