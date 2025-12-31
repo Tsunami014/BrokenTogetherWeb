@@ -46,14 +46,19 @@ function draw() {
     blk_yoffs = Math.round(blk_yoffs+rows/2)
     const scale = blk/32
     for (let i = -3; i < rows+6; i++) {
-        const offs = (i%2)==0 ? 0 : 0.5
+        const offs = ((blk_yoffs+i)%2)==0 ? 0 : 0.5
         for (let j = -2; j < cols+2; j++) {
-            const tle = imgs.get(getTile(j-blk_xoffs, i-blk_yoffs))
-            const xpos = blk*(j-offs)-px_xoffs-1
-            const ypos = qblk*i-px_yoffs-1
-            const thei = tle.height * scale
-            const twid = tle.width * scale
-            ctx.drawImage(tle, xpos-twid+hblk, ypos-thei+hblk, twid+2, thei+2)
+            const tname = getTile(j-blk_xoffs, i-blk_yoffs)
+            const tle = imgs.get(tname)
+            if (!tle) {
+                console.log("Unknown image:", tname)
+            } else {
+                const xpos = blk*(j-offs)-px_xoffs-1
+                const ypos = qblk*i-px_yoffs-1
+                const thei = tle.height * scale
+                const twid = tle.width * scale
+                ctx.drawImage(tle, xpos-twid+hblk, ypos-thei+hblk, twid+2, thei+2)
+            }
         }
     }
 }
